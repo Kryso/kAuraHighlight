@@ -22,6 +22,7 @@ local AURAS = {
 		{ id = 6788 }, -- weakened soul
 		{ id = 33076, caster = "player" }, -- prayer of mending
 		{ id = 6346 }, -- fear ward
+		{ id = 552 }, -- abolish disease
 		-- Paladin
 		{ id = 6940 }, -- hand of sacrifice
 		{ forceId = 53601 }, -- sacred shield
@@ -34,6 +35,10 @@ local AURAS = {
 		-- Warrior
 	};
 
+local FRAME_MARGIN = 3;
+local ICON_MARGIN = 2;
+local ICON_SIZE = 22;
+	
 -- imports
 local kCore = kCore;
 local kWidgets = kWidgets;
@@ -46,8 +51,8 @@ local AuraFrame = kWidgets.AuraFrame;
 -- private
 local HealthBarAuraFrame = function( parent, anchor, x, y )
 	local frame = kWidgets.AuraFrame( parent, UnitAuras );
-	frame:SetIconSize( 22 );
-	frame:SetMargin( 3 );
+	frame:SetIconSize( ICON_SIZE );
+	frame:SetMargin( FRAME_MARGIN );
 	frame:SetPoint( anchor, parent.Health, anchor, x, y );
 	frame:SetFrameStrata( parent:GetFrameStrata() );
 	frame:SetFrameLevel( parent.Health:GetFrameLevel() + 1 );	
@@ -57,21 +62,21 @@ end
 -- event handlers
 
 -- main
-HealthBarAuraFrame( oUF_Tukz_player, "TOP", 0, -3 );
-HealthBarAuraFrame( oUF_Tukz_target, "TOP", 0, -3 );
+HealthBarAuraFrame( oUF_Tukz_player, "TOP", 0, -ICON_MARGIN );
+HealthBarAuraFrame( oUF_Tukz_target, "TOP", 0, -ICON_MARGIN );
 	
 for index = 1, 5 do
 	local frame = _G[ "oUF_Arena" .. tostring( index ) ]
 	if ( not frame ) then break; end
 	
-	HealthBarAuraFrame( frame, "TOPLEFT", 3, -3 );
+	HealthBarAuraFrame( frame, "TOPLEFT", ICON_MARGIN, -ICON_MARGIN );
 end
 
 for index = 1, 5 do
 	local frame = _G[ "oUF_PartyPet" .. tostring( index ) ]
 	if ( not frame ) then break; end
 
-	HealthBarAuraFrame( frame, "TOPRIGHT", -3, -3 );
+	HealthBarAuraFrame( frame, "TOPRIGHT", -ICON_MARGIN, -ICON_MARGIN );
 end
 
 do
@@ -84,7 +89,7 @@ do
 				break;
 			end
 			
-			HealthBarAuraFrame( frame, "TOPRIGHT", -3, -3 );
+			HealthBarAuraFrame( frame, "TOPRIGHT", -ICON_MARGIN, -ICON_MARGIN );
 			partyFramesCreated = partyFramesCreated + 1
 		end
 		
