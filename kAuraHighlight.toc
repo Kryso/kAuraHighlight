@@ -1,6 +1,6 @@
-## Interface: 30300
+## Interface: 60000
 ## Title: kAuraHighlight
 ## Author: Kryso 
-## Dependencies: kCore, Tukui
+## Dependencies: kCore, ElvUI
 
 kAuraHighlight.lua
