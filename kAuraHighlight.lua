@@ -8,36 +8,44 @@ local AURAS = {
 	{ id = 48265 }, -- unholy presence
 	{ id = 48266 }, -- blood presence
 	{ id = 48263 }, -- frost presence
+	{ id = 51271 }, -- pillar of frost
 	-- Druid
 	{ id = 8936 }, -- regrowth
 	{ id = 774 }, -- rejuvenation
 	{ id = 33763 }, -- lifebloom
 	{ id = 22812 }, -- barkskin
 	-- Hunter
+	{ id = 19263 }, -- deterrence
 	-- Mage
+	{ id = 45438 }, -- ice block
+	{ id = 11426 }, -- ice barrier
 	-- Priest
 	{ id = 17 }, -- power word: shield
 	{ id = 33206 }, -- pain suppresion
 	{ id = 139 }, -- renew
 	{ id = 6788 }, -- weakened soul
-	{ id = 33076, caster = "player" }, -- prayer of mending
+	{ id = 33076, caster = "player", notoriety = "FRIEND" }, -- prayer of mending (friendly)
+	{ id = 33076, notoriety = "ENEMY" }, -- prayer of mending (enemy)
 	{ id = 6346 }, -- fear ward
-	{ id = 552 }, -- abolish disease
 	-- Paladin
 	{ id = 6940 }, -- hand of sacrifice
-	{ forceId = 53601 }, -- sacred shield
+	{ id = 1044 }, -- hand of freedom
+	{ forceId = 148039, caster = "player", notoriety = "FRIEND" }, -- sacred shield (friendly)
+	{ forceId = 148039, notoriety = "ENEMY" }, -- sacred shield (enemy)
 	{ id = 25771 }, -- forbearance
+	{ id = 53563 }, -- beacon of light
 	-- Rogue
 	{ id = 26669 }, -- evasion
 	-- Shaman
 	{ id = 49284 }, -- earth shield
 	-- Warlock
+	{ id = 110913 }, -- dark bargain
 	-- Warrior
 };
 
 local FRAME_MARGIN = 3;
 local ICON_MARGIN = 2;
-local ICON_SIZE = 22;
+local ICON_SIZE = 26;
 	
 -- imports
 local kCore = kCore;
@@ -49,21 +57,40 @@ local UnitAuras = kCore.UnitAuras;
 local AuraFrame = kWidgets.AuraFrame;
 
 -- private
-local HealthBarAuraFrame = function( parent, anchor, x, y )
-	local frame = kWidgets.AuraFrame( parent, UnitAuras );
-	frame:SetIconSize( ICON_SIZE );
-	frame:SetMargin( FRAME_MARGIN );
-	frame:SetPoint( anchor, parent.Health, anchor, x, y );
-	frame:SetFrameStrata( parent:GetFrameStrata() );
-	frame:SetFrameLevel( parent.Health:GetFrameLevel() + 1 );	
-	frame:AddFilter( AURAS );
+local HealthBarAuraFrame = function(parent, anchor, x, y)
+	local frame = kWidgets.AuraFrame(parent, UnitAuras);
+	frame:SetIconSize(ICON_SIZE);
+	frame:SetMargin(FRAME_MARGIN);
+	frame:SetPoint(anchor, parent.Health, anchor, x, y);
+	frame:SetFrameStrata(parent:GetFrameStrata());
+	frame:SetFrameLevel(parent.Health:GetFrameLevel() + 10);	
+	frame:AddFilter(AURAS);
+
+	local drFrame = kWidgets.DrFrame(parent);
+	drFrame:SetIconSize(ICON_SIZE);
+	drFrame:SetMargin(FRAME_MARGIN);
+	if (anchor == "CENTER") then
+		drFrame:SetPoint("TOP", parent.Power, "TOP", 0, -ICON_MARGIN);
+	else
+		drFrame:SetPoint(anchor, parent.Power, anchor, x, y);
+	end
+	drFrame:SetFrameStrata(parent:GetFrameStrata());
+	drFrame:SetFrameLevel(parent.Power:GetFrameLevel() + 10);
 end
 
 -- event handlers
 
 -- main
-HealthBarAuraFrame( ElvUF_Player, "TOP", 0, -ICON_MARGIN );
-HealthBarAuraFrame( ElvUF_Target, "TOP", 0, -ICON_MARGIN );
+HealthBarAuraFrame(ElvUF_Player, "CENTER", 0, 0);
+
+HealthBarAuraFrame(ElvUF_Target, "CENTER", 0, 0);
+
+for index = 1, 5 do
+	local frame = _G[ "ElvUF_PartyGroup1UnitButton" .. tostring( index ) ]
+	if ( not frame ) then break; end
+	
+	HealthBarAuraFrame( frame, "TOPRIGHT", -ICON_MARGIN, -ICON_MARGIN );
+end
 	
 for index = 1, 5 do
 	local frame = _G[ "ElvUF_Arena" .. tostring( index ) ]
@@ -79,12 +106,11 @@ for index = 1, 5 do
 
 	HealthBarAuraFrame( frame, "TOPRIGHT", -ICON_MARGIN, -ICON_MARGIN );
 end
-]]
 
 do
 	local event;
 	local partyFramesCreated = 1;
-	local OnPartyMembersChanged = function( self )
+	local OnGroupRosterUpdate = function( self )
 		for index = partyFramesCreated, 5 do
 			local frame = _G[ "ElvUF_PartyGroup1UnitButton" .. tostring( index ) ];
 			if ( not frame ) then
@@ -99,5 +125,6 @@ do
 			kEvents.UnregisterEvent( event );
 		end
 	end
-	event = kEvents.RegisterEvent( "PARTY_MEMBERS_CHANGED", OnPartyMembersChanged );
+	event = kEvents.RegisterEvent( "GROUP_ROSTER_UPDATE", OnGroupRosterUpdate );
 end
+]]
