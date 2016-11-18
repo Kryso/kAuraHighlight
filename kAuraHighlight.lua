@@ -19,14 +19,16 @@ local AURAS = {
 	-- Mage
 	{ id = 45438 }, -- ice block
 	{ id = 11426 }, -- ice barrier
-	-- Priest
+	-- Priest (updated)
 	{ id = 17 }, -- power word: shield
+	{ id = 152118 }, -- clarity of will
+	{ id = 194384, caster = "player", notoriety = "FRIEND" }, -- atonement (own)
+	{ id = 194384, notoriety = "ENEMY" }, -- atonement (enemy)
 	{ id = 33206 }, -- pain suppresion
-	{ id = 139 }, -- renew
-	{ id = 6788 }, -- weakened soul
-	{ id = 33076, caster = "player", notoriety = "FRIEND" }, -- prayer of mending (friendly)
-	{ id = 33076, notoriety = "ENEMY" }, -- prayer of mending (enemy)
-	{ id = 6346 }, -- fear ward
+	{ id = 47585 }, -- dispersion 
+
+	{ id = 34914, caster = "player", notoriety = "ENEMY"}, -- vampiric touch (enemy)
+	{ id = 589, caster = "player", notoriety = "ENEMY"}, -- shadow word: pain (enemy)
 	-- Paladin
 	{ id = 6940 }, -- hand of sacrifice
 	{ id = 1044 }, -- hand of freedom
